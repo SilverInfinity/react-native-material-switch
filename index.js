@@ -1,47 +1,24 @@
-var React = require('react');
-var ReactNative = require('react-native');
+import React from 'react';
 
-var {
+import {
   PanResponder,
   View,
   TouchableHighlight,
   Animated,
-} = ReactNative;
+} from 'react-native';
 
 var MaterialSwitch = React.createClass({
-  padding: 8,
-
-  propTypes: {
-    active: React.PropTypes.bool,
-    style: View.propTypes.style,
-    inactiveButtonColor: React.PropTypes.string,
-    inactiveButtonPressedColor: React.PropTypes.string,
-    activeButtonColor: React.PropTypes.string,
-    activeButtonPressedColor: React.PropTypes.string,
-    buttonShadow: View.propTypes.style,
-    activeBackgroundColor: React.PropTypes.string,
-    inactiveBackgroundColor: React.PropTypes.string,
-    buttonRadius: React.PropTypes.number,
-    switchWidth: React.PropTypes.number,
-    switchHeight: React.PropTypes.number,
-    buttonContent: React.PropTypes.element,
-    enableSlide: React.PropTypes.bool,
-    switchAnimationTime: React.PropTypes.number,
-    onActivate: React.PropTypes.func,
-    onDeactivate: React.PropTypes.func,
-    onChangeState: React.PropTypes.func,
-  },
+  padding: 2,
 
   getDefaultProps() {
     return {
       active: false,
-      style: {},
+      styles: {},
       inactiveButtonColor: '#2196F3',
       inactiveButtonPressedColor: '#42A5F5',
       activeButtonColor: '#FAFAFA',
       activeButtonPressedColor: '#F5F5F5',
       buttonShadow: {
-        elevation: 3,
         shadowColor: '#000',
         shadowOpacity: 0.5,
         shadowRadius: 1,
@@ -53,7 +30,6 @@ var MaterialSwitch = React.createClass({
       switchWidth: 40,
       switchHeight: 20,
       buttonContent: null,
-      buttonOffset: 0,
       enableSlide: true,
       switchAnimationTime: 200,
       onActivate: function() {},
@@ -63,12 +39,11 @@ var MaterialSwitch = React.createClass({
   },
 
   getInitialState() {
-    var w = (this.props.switchWidth - Math.min(this.props.switchHeight, this.props.buttonRadius*2) - this.props.buttonOffset);
-
+    var w = this.props.switchWidth - Math.min(this.props.switchHeight, this.props.buttonRadius*2);
     return {
       width: w,
       state: this.props.active,
-      position: new Animated.Value(this.props.active? w : this.props.buttonOffset),
+      position: new Animated.Value(this.props.active? w : 0),
     };
   },
 
@@ -82,8 +57,6 @@ var MaterialSwitch = React.createClass({
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
       onPanResponderGrant: (evt, gestureState) => {
-        if (!this.props.enableSlide) return;
-
         this.setState({pressed: true});
         this.start.x0 = gestureState.x0;
         this.start.pos = this.state.position._value;
@@ -147,12 +120,6 @@ var MaterialSwitch = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function(nextProps){
-    if(this.state.state !== nextProps.active){
-      nextProps.active ? this.activate() : this.deactivate()
-    }
-  },
-
   onSwipe(currentPosition, startingPosition, onChange, onTerminate) {
     if (currentPosition-startingPosition >= 0) {
       if (currentPosition-startingPosition > this.state.width/2 || startingPosition == this.state.width) {
@@ -175,7 +142,6 @@ var MaterialSwitch = React.createClass({
       {
         toValue: this.state.width,
         duration: this.props.switchAnimationTime,
-        useNativeDriver: true,
       }
     ).start();
     this.changeState(true);
@@ -185,9 +151,8 @@ var MaterialSwitch = React.createClass({
     Animated.timing(
       this.state.position,
       {
-        toValue: this.props.buttonOffset,
+        toValue: 0,
         duration: this.props.switchAnimationTime,
-        useNativeDriver: true,
       }
     ).start();
     this.changeState(false);
@@ -214,8 +179,6 @@ var MaterialSwitch = React.createClass({
   },
 
   toggle() {
-    if (!this.props.enableSlide) return;
-
     if (this.state.state) {
       this.deactivate();
     } else {
@@ -227,17 +190,14 @@ var MaterialSwitch = React.createClass({
     var doublePadding = this.padding*2-2;
     var halfPadding = doublePadding/2;
     return (
-      <View
-        {...this._panResponder.panHandlers}
-        style={[{padding: this.padding, position: 'relative'}, this.props.style]}>
-        <View
-          style={{
+      <View style={{padding: this.padding, position: 'relative'}}>
+        <View style={{
             backgroundColor: this.state.state ? this.props.activeBackgroundColor : this.props.inactiveBackgroundColor,
             height: this.props.switchHeight,
             width: this.props.switchWidth,
             borderRadius: this.props.switchHeight/2,
           }}/>
-        <TouchableHighlight underlayColor='transparent' activeOpacity={1} style={{
+        <TouchableHighlight underlayColor='transparent' activeOpacity={1} onPress={() => { this.toggle(); }} style={{
             height: Math.max(this.props.buttonRadius*2+doublePadding, this.props.switchHeight+doublePadding),
             width: this.props.switchWidth+doublePadding,
             position: 'absolute',
@@ -261,8 +221,11 @@ var MaterialSwitch = React.createClass({
               transform: [{ translateX: this.state.position }]
             },
             this.props.buttonShadow]}
+            {...this._panResponder.panHandlers}
           >
-            {this.props.buttonContent}
+            {
+              this.props.buttonContent && this.props.buttonContent(this.state.state)
+            }
           </Animated.View>
         </TouchableHighlight>
       </View>
