@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { PanResponder, View, TouchableHighlight, Animated } from 'react-native';
+import { PanResponder, View, TouchableHighlight, Animated } from "react-native";
 
 class MaterialSwitch extends React.Component {
 	padding = 2;
@@ -12,18 +12,18 @@ class MaterialSwitch extends React.Component {
 	static defaultProps = {
 		active: false,
 		styles: {},
-		inactiveButtonColor: '#2196F3',
-		inactiveButtonPressedColor: '#42A5F5',
-		activeButtonColor: '#FAFAFA',
-		activeButtonPressedColor: '#F5F5F5',
+		inactiveButtonColor: "#2196F3",
+		inactiveButtonPressedColor: "#42A5F5",
+		activeButtonColor: "#FAFAFA",
+		activeButtonPressedColor: "#F5F5F5",
 		buttonShadow: {
-			shadowColor: '#000',
+			shadowColor: "#000",
 			shadowOpacity: 0.5,
 			shadowRadius: 1,
-			shadowOffset: { height: 1, width: 0 },
+			shadowOffset: { height: 1, width: 0 }
 		},
-		activeBackgroundColor: 'rgba(255,255,255,.5)',
-		inactiveBackgroundColor: 'rgba(0,0,0,.5)',
+		activeBackgroundColor: "rgba(255,255,255,.5)",
+		inactiveBackgroundColor: "rgba(0,0,0,.5)",
 		buttonRadius: 15,
 		switchWidth: 40,
 		switchHeight: 20,
@@ -32,7 +32,7 @@ class MaterialSwitch extends React.Component {
 		switchAnimationTime: 200,
 		onActivate: () => {},
 		onDeactivate: () => {},
-		onChangeState: () => {},
+		onChangeState: () => {}
 	};
 
 	state = {
@@ -40,7 +40,7 @@ class MaterialSwitch extends React.Component {
 			this.props.switchWidth -
 			Math.min(this.props.switchHeight, this.props.buttonRadius * 2),
 		state: this.props.active,
-		position: new Animated.Value(this.props.active ? w : 0),
+		position: new Animated.Value(this.props.active ? w : 0)
 	};
 
 	componentWillMount() {
@@ -95,7 +95,7 @@ class MaterialSwitch extends React.Component {
 					() => {
 						if (this.start.state) this.start.stateChanged = true;
 						this.setState({ state: false });
-					},
+					}
 				);
 			},
 			onPanResponderTerminationRequest: (evt, gestureState) => true,
@@ -114,7 +114,7 @@ class MaterialSwitch extends React.Component {
 					currentPos,
 					this.start.pos,
 					this.activate,
-					this.deactivate,
+					this.deactivate
 				);
 			},
 			onPanResponderTerminate: (evt, gestureState) => {
@@ -124,10 +124,10 @@ class MaterialSwitch extends React.Component {
 					currentPos,
 					this.start.pos,
 					this.activate,
-					this.deactivate,
+					this.deactivate
 				);
 			},
-			onShouldBlockNativeResponder: (evt, gestureState) => true,
+			onShouldBlockNativeResponder: (evt, gestureState) => true
 		});
 	}
 
@@ -141,7 +141,7 @@ class MaterialSwitch extends React.Component {
 		}
 	}
 
-	onSwipe = (currentPosition, startingPosition, onChange, onTerminate) => {
+	onSwipe(currentPosition, startingPosition, onChange, onTerminate) {
 		if (currentPosition - startingPosition >= 0) {
 			if (
 				currentPosition - startingPosition > this.state.width / 2 ||
@@ -156,21 +156,23 @@ class MaterialSwitch extends React.Component {
 		} else {
 			onChange();
 		}
-	};
+	}
 
 	activate = () => {
-		Animated.timing(this.state.position, {
-			toValue: this.state.width,
-			duration: this.props.switchAnimationTime,
-		}).start();
+		this.state.position &&
+			Animated.timing(this.state.position, {
+				toValue: this.state.width,
+				duration: this.props.switchAnimationTime
+			}).start();
 		this.changeState(true);
 	};
 
 	deactivate = () => {
-		Animated.timing(this.state.position, {
-			toValue: 0,
-			duration: this.props.switchAnimationTime,
-		}).start();
+		this.state.position &&
+			Animated.timing(this.state.position, {
+				toValue: 0,
+				duration: this.props.switchAnimationTime
+			}).start();
 		this.changeState(false);
 	};
 
@@ -206,7 +208,7 @@ class MaterialSwitch extends React.Component {
 		const doublePadding = this.padding * 2 - 2;
 		const halfPadding = doublePadding / 2;
 		return (
-			<View style={{ padding: this.padding, position: 'relative' }}>
+			<View style={{ padding: this.padding, position: "relative" }}>
 				<View
 					style={{
 						backgroundColor: this.state.state
@@ -214,7 +216,7 @@ class MaterialSwitch extends React.Component {
 							: this.props.inactiveBackgroundColor,
 						height: this.props.switchHeight,
 						width: this.props.switchWidth,
-						borderRadius: this.props.switchHeight / 2,
+						borderRadius: this.props.switchHeight / 2
 					}}
 				/>
 				<TouchableHighlight
@@ -226,12 +228,12 @@ class MaterialSwitch extends React.Component {
 					style={{
 						height: Math.max(
 							this.props.buttonRadius * 2 + doublePadding,
-							this.props.switchHeight + doublePadding,
+							this.props.switchHeight + doublePadding
 						),
 						width: this.props.switchWidth + doublePadding,
-						position: 'absolute',
+						position: "absolute",
 						top: 1,
-						left: 1,
+						left: 1
 					}}
 				>
 					<Animated.View
@@ -247,10 +249,10 @@ class MaterialSwitch extends React.Component {
 								height: this.props.buttonRadius * 2,
 								width: this.props.buttonRadius * 2,
 								borderRadius: this.props.buttonRadius,
-								alignItems: 'center',
-								justifyContent: 'center',
-								flexDirection: 'row',
-								position: 'absolute',
+								alignItems: "center",
+								justifyContent: "center",
+								flexDirection: "row",
+								position: "absolute",
 								top:
 									halfPadding +
 									this.props.switchHeight / 2 -
@@ -261,9 +263,9 @@ class MaterialSwitch extends React.Component {
 										: halfPadding +
 											this.props.switchHeight / 2 -
 											this.props.buttonRadius,
-								transform: [{ translateX: this.state.position }],
+								transform: [{ translateX: this.state.position }]
 							},
-							this.props.buttonShadow,
+							this.props.buttonShadow
 						]}
 						{...this._panResponder.panHandlers}
 					>
