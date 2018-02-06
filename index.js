@@ -247,7 +247,7 @@ class MaterialSwitch extends React.Component {
 										? this.props.inactiveButtonPressedColor
 										: this.props.inactiveButtonColor,
 								height: this.props.buttonRadius * 2,
-								width: this.props.buttonRadius * 2,
+								width: this.props.buttonRadius * 8, // Change this to increase/decrease the width
 								borderRadius: this.props.buttonRadius,
 								alignItems: "center",
 								justifyContent: "center",
