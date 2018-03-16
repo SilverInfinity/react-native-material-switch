@@ -43,7 +43,7 @@ var Application = React.createClass({
 
 * `active` (Boolean) - Initial switch state (default: false),
 * `style` (Object) - Styles for outer container (margins, ...),
-* `buttonStyle` (Object) - Override Styles of the button,
+* `buttonStyle` (Object) - Override Styles of the button, set the width property if you want an oval shaped button,
 * `inactiveButtonColor` (String) - Button color (default: '#2196F3'),
 * `inactiveButtonPressedColor` (String) (default: '#42A5F5'),
 * `activeButtonColor` (String) (default: '#FAFAFA'),
