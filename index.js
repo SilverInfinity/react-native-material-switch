@@ -278,4 +278,4 @@ class MaterialSwitch extends React.Component {
   }
 }
 
-module.exports = MaterialSwitch;
+export default MaterialSwitch;
