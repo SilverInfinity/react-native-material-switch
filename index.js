@@ -1,6 +1,7 @@
 import React from "react";
 
 import { PanResponder, View, TouchableHighlight, Animated } from "react-native";
+
 class MaterialSwitch extends React.Component {
   padding = 2;
   start = {};
@@ -25,15 +26,16 @@ class MaterialSwitch extends React.Component {
     switchHeight: 20,
     buttonContent: null,
     enableSlide: true,
+    disabled: false,
     switchAnimationTime: 200,
-    onActivate: function() {},
-    onDeactivate: function() {},
-    onChangeState: function() {}
+    onActivate() {},
+    onDeactivate() {},
+    onChangeState() {}
   };
 
   constructor(props) {
     super(props);
-    var w =
+    const w =
       this.props.switchWidth -
       Math.min(this.props.switchHeight, this.props.buttonRadius * 2);
     this.state = {
@@ -59,7 +61,7 @@ class MaterialSwitch extends React.Component {
         this.start.stateChanged = false;
       },
       onPanResponderMove: (evt, gestureState) => {
-        if (!this.props.enableSlide) return;
+        if (!this.props.enableSlide || this.props.disabled) return;
 
         this.start.moved = true;
         if (this.start.pos == 0) {
@@ -84,7 +86,7 @@ class MaterialSwitch extends React.Component {
             this.state.position.setValue(0);
           }
         }
-        var currentPos = this.state.position._value;
+        const currentPos = this.state.position._value;
         this.onSwipe(
           currentPos,
           this.start.pos,
@@ -101,7 +103,7 @@ class MaterialSwitch extends React.Component {
       onPanResponderTerminationRequest: (evt, gestureState) => true,
       onPanResponderRelease: (evt, gestureState) => {
         this.setState({ pressed: false });
-        var currentPos = this.state.position._value;
+        const currentPos = this.state.position._value;
         if (
           !this.start.moved ||
           (Math.abs(currentPos - this.start.pos) < 5 &&
@@ -118,7 +120,7 @@ class MaterialSwitch extends React.Component {
         );
       },
       onPanResponderTerminate: (evt, gestureState) => {
-        var currentPos = this.state.position._value;
+        const currentPos = this.state.position._value;
         this.setState({ pressed: false });
         this.onSwipe(
           currentPos,
@@ -151,12 +153,10 @@ class MaterialSwitch extends React.Component {
       } else {
         onTerminate();
       }
+    } else if (currentPosition - startingPosition < -this.state.width / 2) {
+      onTerminate();
     } else {
-      if (currentPosition - startingPosition < -this.state.width / 2) {
-        onTerminate();
-      } else {
-        onChange();
-      }
+      onChange();
     }
   }
 
@@ -177,9 +177,9 @@ class MaterialSwitch extends React.Component {
   }
 
   changeState(state) {
-    var callHandlers = this.start.state != state;
+    const callHandlers = this.start.state != state;
     setTimeout(() => {
-      this.setState({ state: state });
+      this.setState({ state });
       if (callHandlers) {
         this.callback();
       }
@@ -187,7 +187,7 @@ class MaterialSwitch extends React.Component {
   }
 
   callback() {
-    var state = this.state.state;
+    const state = this.state.state;
     if (state) {
       this.props.onActivate();
     } else {
@@ -197,16 +197,18 @@ class MaterialSwitch extends React.Component {
   }
 
   toggle() {
-    if (this.state.state) {
-      this.deactivate();
-    } else {
-      this.activate();
+    if (!this.props.disabled) {
+      if (this.state.state) {
+        this.deactivate();
+      } else {
+        this.activate();
+      }
     }
   }
 
   render() {
-    var doublePadding = this.padding * 2 - 2;
-    var halfPadding = doublePadding / 2;
+    const doublePadding = this.padding * 2 - 2;
+    const halfPadding = doublePadding / 2;
     return (
       <View style={{ padding: this.padding, position: "relative" }}>
         <View
