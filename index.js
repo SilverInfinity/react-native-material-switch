@@ -40,10 +40,7 @@ class MaterialSwitch extends React.Component {
       this.props.buttonStyle && this.props.buttonStyle.width
         ? this.props.buttonStyle.width
         : this.props.buttonRadius * 2;
-    console.log(this.buttonWidth);
     const w = this.props.switchWidth - this.buttonWidth;
-    console.log(this.props.switchWidth);
-    console.log(w);
     this.state = {
       width: w,
       state: this.props.active,
@@ -149,7 +146,7 @@ class MaterialSwitch extends React.Component {
     }
   }
 
-  onSwipe(currentPosition, startingPosition, onChange, onTerminate) {
+  onSwipe = (currentPosition, startingPosition, onChange, onTerminate) => {
     if (currentPosition - startingPosition >= 0) {
       if (
         currentPosition - startingPosition > this.state.width / 2 ||
@@ -164,25 +161,26 @@ class MaterialSwitch extends React.Component {
     } else {
       onChange();
     }
-  }
+  };
 
-  activate() {
+  activate = () => {
     Animated.timing(this.state.position, {
       toValue: this.state.width,
       duration: this.props.switchAnimationTime
     }).start();
     this.changeState(true);
-  }
+  };
 
-  deactivate() {
+  deactivate = () => {
+    console.log(this.state);
     Animated.timing(this.state.position, {
       toValue: 0,
       duration: this.props.switchAnimationTime
     }).start();
     this.changeState(false);
-  }
+  };
 
-  changeState(state) {
+  changeState = state => {
     const callHandlers = this.start.state != state;
     setTimeout(() => {
       this.setState({ state });
@@ -190,9 +188,9 @@ class MaterialSwitch extends React.Component {
         this.callback();
       }
     }, this.props.switchAnimationTime / 0.9);
-  }
+  };
 
-  callback() {
+  callback = () => {
     const state = this.state.state;
     if (state) {
       this.props.onActivate();
@@ -200,9 +198,9 @@ class MaterialSwitch extends React.Component {
       this.props.onDeactivate();
     }
     this.props.onChangeState(state);
-  }
+  };
 
-  toggle() {
+  toggle = () => {
     if (!this.props.disabled) {
       if (this.state.state) {
         this.deactivate();
@@ -210,7 +208,7 @@ class MaterialSwitch extends React.Component {
         this.activate();
       }
     }
-  }
+  };
 
   render() {
     const doublePadding = this.padding * 2 - 2;
