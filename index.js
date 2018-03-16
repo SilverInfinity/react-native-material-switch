@@ -3,7 +3,6 @@ import React from "react";
 import { PanResponder, View, TouchableHighlight, Animated } from "react-native";
 
 class MaterialSwitch extends React.Component {
-  padding = 2;
   start = {};
 
   static defaultProps = {
@@ -65,7 +64,6 @@ class MaterialSwitch extends React.Component {
       },
       onPanResponderMove: (evt, gestureState) => {
         if (!this.props.enableSlide || this.props.disabled) return;
-
         this.start.moved = true;
         if (this.start.pos == 0) {
           if (gestureState.dx <= this.state.width && gestureState.dx >= 0) {
@@ -172,7 +170,6 @@ class MaterialSwitch extends React.Component {
   };
 
   deactivate = () => {
-    console.log(this.state);
     Animated.timing(this.state.position, {
       toValue: 0,
       duration: this.props.switchAnimationTime
@@ -209,12 +206,63 @@ class MaterialSwitch extends React.Component {
       }
     }
   };
+  renderButton = () => (
+    <Animated.View
+      style={[
+        {
+          backgroundColor: this.state.state
+            ? this.state.pressed
+              ? this.props.activeButtonPressedColor
+              : this.props.activeButtonColor
+            : this.state.pressed
+              ? this.props.inactiveButtonPressedColor
+              : this.props.inactiveButtonColor,
+          height: this.props.buttonRadius * 2,
+          width: this.props.buttonRadius * 2,
+          borderRadius: this.props.buttonRadius,
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+          position: "absolute",
+          top: 2 + this.props.switchHeight / 2 - this.props.buttonRadius,
+          transform: [{ translateX: this.state.position }]
+        },
+        this.props.buttonShadow,
+        this.props.buttonStyle
+      ]}
+      {...this._panResponder.panHandlers}
+    >
+      {this.props.buttonContent && this.props.buttonContent(this.state.state)}
+    </Animated.View>
+  );
+  renderDisabledButton = () => (
+    <Animated.View
+      style={[
+        {
+          backgroundColor: this.state.state
+            ? this.props.activeButtonColor
+            : this.props.inactiveButtonColor,
+          height: this.props.buttonRadius * 2,
+          width: this.props.buttonRadius * 2,
+          borderRadius: this.props.buttonRadius,
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+          position: "absolute",
+          top: 2 + this.props.switchHeight / 2 - this.props.buttonRadius,
+          transform: [{ translateX: this.state.position }]
+        },
+        this.props.buttonShadow,
+        this.props.buttonStyle
+      ]}
+    >
+      {this.props.buttonContent && this.props.buttonContent(this.state.state)}
+    </Animated.View>
+  );
 
   render() {
-    const doublePadding = this.padding * 2 - 2;
-    const halfPadding = doublePadding / 2;
     return (
-      <View style={{ padding: this.padding, position: "relative" }}>
+      <View style={{ padding: 2, position: "relative" }}>
         <View
           style={[
             {
@@ -228,54 +276,21 @@ class MaterialSwitch extends React.Component {
             this.props.style
           ]}
         >
-          <TouchableHighlight
-            underlayColor="transparent"
-            activeOpacity={1}
-            onPress={() => {
-              this.toggle();
-            }}
+          <View
             style={{
               height: Math.max(
-                this.props.buttonRadius * 2 + doublePadding,
-                this.props.switchHeight + doublePadding
+                this.props.buttonRadius * 2 + 2,
+                this.props.switchHeight + 2
               ),
-              width: this.props.switchWidth + doublePadding,
+              width: this.props.switchWidth + 2,
               position: "absolute",
               top: -1
             }}
           >
-            <Animated.View
-              style={[
-                {
-                  backgroundColor: this.state.state
-                    ? this.state.pressed
-                      ? this.props.activeButtonPressedColor
-                      : this.props.activeButtonColor
-                    : this.state.pressed
-                      ? this.props.inactiveButtonPressedColor
-                      : this.props.inactiveButtonColor,
-                  height: this.props.buttonRadius * 2,
-                  width: this.props.buttonRadius * 2,
-                  borderRadius: this.props.buttonRadius,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                  position: "absolute",
-                  top:
-                    halfPadding +
-                    this.props.switchHeight / 2 -
-                    this.props.buttonRadius,
-                  transform: [{ translateX: this.state.position }]
-                },
-                this.props.buttonShadow,
-                this.props.buttonStyle
-              ]}
-              {...this._panResponder.panHandlers}
-            >
-              {this.props.buttonContent &&
-                this.props.buttonContent(this.state.state)}
-            </Animated.View>
-          </TouchableHighlight>
+            {this.props.disabled
+              ? this.renderDisabledButton()
+              : this.renderButton()}
+          </View>
         </View>
       </View>
     );
