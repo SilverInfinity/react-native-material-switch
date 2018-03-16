@@ -183,7 +183,7 @@ class MaterialSwitch extends React.Component {
       if (callHandlers) {
         this.callback();
       }
-    }, this.props.switchAnimationTime / 2);
+    }, this.props.switchAnimationTime / 0.9);
   }
 
   callback() {
