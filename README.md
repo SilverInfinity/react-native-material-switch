@@ -22,21 +22,21 @@ npm install react-native-material-switch
 ### Usage example
 
 ```javascript
-var Switch = require("react-native-material-switch");
+import Switch from "react-native-material-switch";
 
-var Application = React.createClass({
-  render: function() {
+class Application extends React.component {
+  render() {
     return (
       <View>
         <Switch
           onChangeState={state => {
-            alert(state);
+            alert(state);å
           }}
         />
       </View>
     );
   }
-});
+}
 ```
 
 ### Properties
