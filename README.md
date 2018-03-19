@@ -6,32 +6,37 @@
 
 ### Content
 
-* [Installation](#installation)
 * [Usage example](#usage-example)
 * [Properties](#properties)
 * [Events](#events)
 * [Live example](#live-example)
 * [Questions?](#questions)
 
-### Installation
-
-```bash
-npm install react-native-material-switch
-```
-
-### Usage example
+### Usage examples
 
 ```javascript
-import Switch from "react-native-material-switch";
+import Switch from "components/Switch";
+
+const buttonContent = () => <Text>Switch Text</Text>;
 
 class Application extends React.component {
   render() {
     return (
       <View>
-        <Switch
+        <Switch // circular switch
           onChangeState={state => {
             alert(state);
           }}
+          buttonRadius={20}
+        />
+
+        <Switch // oval switch with content
+          onChangeState={state => {
+            alert(state);
+          }}
+          buttonRadius={20}
+          buttonStyle={{ width: 50 }}
+          buttonContent={buttonContent}
         />
       </View>
     );
