@@ -30,7 +30,7 @@ class Application extends React.component {
       <View>
         <Switch
           onChangeState={state => {
-            alert(state);å
+            alert(state);
           }}
         />
       </View>
